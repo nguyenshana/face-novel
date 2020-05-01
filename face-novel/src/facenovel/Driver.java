@@ -6,12 +6,12 @@ public class Driver
 	{
 		ProfileManager m = new ProfileManager();
 
-      System.out.println("Creating profiles and the network.");
+		System.out.println("Creating profiles and the network.");
 
-      Profile john = new Profile();
+		Profile john = new Profile();
 		john.setName("John", "Doe");
 		john.setStatus("Married");
-      m.addProfile(john);
+		m.addProfile(john);
 
 		
 	} // end main
