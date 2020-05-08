@@ -1,4 +1,5 @@
-package facenovel;
+package facenovelpackage;
+
 import java.awt.image.*;
 import java.util.*;
 //import GraphPackage.*;
@@ -36,9 +37,20 @@ public class ProfileManager
 		b.addFriend(a);
 	} // end createFriendship
 
+	public void leaveNetwork(Profile person)
+	{
+		allProfiles.remove(person);
+	}
+	
 	/** Displays each profile's information and friends. */
 	public void display(Profile startPoint)
 	{
-		startPoint.display();
+		ArrayList<Profile> network = allProfiles.getNetwork();
+		int startIndex = network.indexOf(startPoint);
+		for(int i = startIndex; i < network.size(); i++)
+		{
+			network.get(i).display();
+		}
 	}
 } // end ProfileManager
+

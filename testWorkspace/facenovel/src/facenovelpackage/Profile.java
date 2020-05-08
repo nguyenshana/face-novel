@@ -1,4 +1,4 @@
-package facenovel;
+package facenovelpackage;
 
 import java.util.*;
 import java.awt.image.BufferedImage;
@@ -90,7 +90,7 @@ public class Profile {
 
 	public String toString()
 	{
-		return "toString";
+		return name;
 	} // end toString
 
 	/** Displays the profile's information and friendProfiles. */
@@ -99,9 +99,15 @@ public class Profile {
 		System.out.println(name);
 		System.out.println(status);
 		System.out.println("Friends: ");
+		if(friendProfiles.size() == 0)
+		{
+			System.out.println("No friends :(");
+		}
 		for(int i = 0; i < friendProfiles.size(); i++)
 		{
-			System.out.println(i + ". "+ friendProfiles.get(i));
+			int num = i + 1;
+			System.out.println(num + ". "+ friendProfiles.get(i));
 		}
+		System.out.println();
 	} // end display
 } // end Profile
