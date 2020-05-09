@@ -42,6 +42,18 @@ public class ProfileManager
 		allProfiles.remove(person);
 	}
 	
+	public Profile findPerson(String searchName)
+	{
+		for(Profile person : allProfiles.getNetwork()) 
+		{
+			if(person.getName().equals(searchName)) 
+			{
+				return person;
+			}
+		}
+		return null;
+	}
+	
 	/** Displays each profile's information and friends. */
 	public void display(Profile startPoint)
 	{

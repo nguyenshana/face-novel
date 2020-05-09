@@ -26,6 +26,8 @@ public class Driver
 		sunny.setStatus("Single");
 		m.addProfile(sunny);
 		
+		
+		
 		m.leaveNetwork(john);
 		
 		m.display(joe);
