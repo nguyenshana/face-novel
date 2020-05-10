@@ -5,10 +5,13 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.*;
@@ -60,7 +63,6 @@ public class FaceNovel
 	    private JLabel uploadLabel;
 	    private JTextField uploadTextField;
 		
-		private GridLayout grid;
 		
 		public addPerson()
 		{
@@ -70,6 +72,8 @@ public class FaceNovel
 			f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			buildPanel();
 			f.add(panel);
+	        f.getContentPane().add(panel, BorderLayout.NORTH);
+			f.pack();
 			f.setVisible(true);
 		}
 		
@@ -89,30 +93,50 @@ public class FaceNovel
 			singleButton.addActionListener(new SingleButtonListener());
 			marriedButton = new JButton("Married");
 			marriedButton.addActionListener(new MarriedButtonListener());
-
 			
 			addButton = new JButton("Add");
 			addButton.addActionListener(new AddButtonListener());
 			
-			panel = new JPanel();
-//			grid = new GridLayout(5,4);
-//			panel.setLayout(grid);
+			panel = new JPanel(new GridBagLayout());
 			
 			uploadLabel = new JLabel("Enter your image's pathfield here:");
 	        uploadTextField = new JTextField(20);
-
+	        
+	        GridBagConstraints c = new GridBagConstraints();
+	        c.gridx = 0;
+	        c.gridy = 0;
+	        c.insets = new Insets(0,0,5,5);
+			panel.add(navToSearchPerson, c);
 			
-			panel.add(navToSearchPerson);
-			panel.add(firstNameLabel);
-			panel.add(firstNameTextField);
-			panel.add(lastNameLabel);
-			panel.add(lastNameTextField);
-			panel.add(statusLabel);
-			panel.add(singleButton);
-			panel.add(marriedButton);
-			panel.add(uploadLabel);
-	        panel.add(uploadTextField);
-	        panel.add(addButton);
+			c.gridy = 1;
+			panel.add(firstNameLabel,c );
+			c.gridx = 1;
+			panel.add(firstNameTextField,c);
+			
+			c.gridx = 0;
+			c.gridy = 2;
+			panel.add(lastNameLabel,c);
+			c.gridx = 1;
+			panel.add(lastNameTextField,c);
+			
+			c.gridx = 0;
+			c.gridy = 3;
+			panel.add(statusLabel,c);
+			c.gridx = 1;
+			panel.add(singleButton,c);
+			c.gridx = 2;
+			panel.add(marriedButton,c);
+			
+			c.gridx = 0;
+			c.gridy = 4;
+			panel.add(uploadLabel,c);
+			c.gridx = 1;
+	        panel.add(uploadTextField,c);
+	        
+	        c.gridx = 0;
+	        c.gridy = 5;
+	        panel.add(addButton,c);
+	        
 			
 		}
 		
@@ -121,6 +145,7 @@ public class FaceNovel
 			public void actionPerformed(ActionEvent e)
 			{
 				panel.removeAll();
+				f.remove(panel);
 				new searchPerson();
 			}
 		}
@@ -162,17 +187,25 @@ public class FaceNovel
 					{
 					    img = ImageIO.read(new File(uploadTextField.getText()));
 					    toAdd.setProfilePicture(img);
-			            JOptionPane.showMessageDialog(null, "Image successfully uploaded."); //if image was uploaded
 			            m.addProfile(toAdd);
 						toAdd.display();
 						
 						panel.removeAll();
+						f.remove(panel);
 						
 						new searchPerson();
 					} 
 					catch (IOException a) 
 					{
-			            JOptionPane.showMessageDialog(null, "Invalid image."); //if image was not uploaded
+			            JOptionPane.showMessageDialog(null, "Invalid image, but account created."); //if image was not uploaded
+					    toAdd.setProfilePicture(null);
+			            m.addProfile(toAdd);
+						toAdd.display();
+						
+						panel.removeAll();
+						f.remove(panel);
+						
+						new searchPerson();
 					}
 				}
 			}
@@ -200,6 +233,8 @@ public class FaceNovel
 			f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			buildPanel();
 			f.add(panel);
+			f.getContentPane().add(panel, BorderLayout.NORTH);
+			f.pack();
 			f.setVisible(true);
 		}
 	
@@ -215,12 +250,23 @@ public class FaceNovel
 			searchButton = new JButton("Search");
 			searchButton.addActionListener(new SearchButtonListener());
 			
-			panel = new JPanel();
+			panel = new JPanel(new GridBagLayout());
 			
-			panel.add(navToAdd);
-			panel.add(messageLabel);
-			panel.add(textField);
-			panel.add(searchButton);
+			GridBagConstraints c = new GridBagConstraints();
+	        c.gridx = 0;
+	        c.gridy = 0;
+	        c.insets = new Insets(0,0,5,5);
+			panel.add(navToAdd,c);
+			
+			c.gridx = 0;
+			c.gridy = 1;
+			panel.add(messageLabel,c);
+			c.gridx = 1;
+			panel.add(textField,c);
+			
+			c.gridx = 0;
+			c.gridy = 2;
+			panel.add(searchButton,c);
 		}
 		
 		class goToAdd implements ActionListener
@@ -228,6 +274,7 @@ public class FaceNovel
 			public void actionPerformed(ActionEvent e)
 			{
 				panel.removeAll();
+				f.remove(panel);
 				new addPerson();
 			}
 		}
@@ -273,24 +320,21 @@ public class FaceNovel
 		private JPanel panel;
 		private JPanel profilePicPanel;
 		
+		private GridBagConstraints c;
+		
 		public profilePage(Profile person) {
 			
 			this.person = person;
-		
 			setTitle("Profile");
-			
-			setSize(1000, 1000);
-			
+			Dimension windowSize = new Dimension(600, 500);
+			setMinimumSize(windowSize);
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			
 			setLayout(new BorderLayout());
-			
 			createProfilePanel(person);
 			createImagePanel();
-			
 			add(profilePicPanel, BorderLayout.NORTH);
 			add(panel, BorderLayout.CENTER);
-			
+			f.pack();
 			pack();
 			
 			setVisible(true);
@@ -300,31 +344,44 @@ public class FaceNovel
 			
 			ArrayList<Profile> friendsList = person.getFriends();
 			
-			panel = new JPanel();
+			panel = new JPanel(new GridBagLayout());
 			
 			JButton editProfileButton = new JButton("Edit Profile");
 			editProfileButton.addActionListener(new editButtonListener());
 			
-			panel.add(editProfileButton);
+			c = new GridBagConstraints();
+	        c.gridx = 0;
+	        c.gridy = 0;
+	        c.insets = new Insets(5,5,10,5);
+			panel.add(editProfileButton,c);
+			
+			JButton deleteButton = new JButton("Delete Account");
+			deleteButton.addActionListener(new deleteButtonListener());
+			
+			c.gridx = 1;
+			panel.add(deleteButton,c);
 			
 			addFriendLabel = new JLabel("Add a friend: ");
 			addFriendTextField = new JTextField(20); 
 			JButton addFriendButton = new JButton("Add");
 			addFriendButton.addActionListener(new addFriendButtonListener());
 			
-			panel.add(addFriendLabel);
-			panel.add(addFriendTextField);
-			panel.add(addFriendButton);
+			c.gridx = 0;
+			c.gridy = 1;
+			panel.add(addFriendLabel,c);
+			c.gridx = 1;
+			panel.add(addFriendTextField,c);
+			c.gridx = 2;
+			panel.add(addFriendButton,c);
 			
-			JButton deleteButton = new JButton("Delete Account");
-			deleteButton.addActionListener(new deleteButtonListener());
-			
-			panel.add(deleteButton);
-
 
             // convert ArrayList to Array
             if(friendsList.size() > 0)
             {
+            	c.gridx = 0;
+    			c.gridy = 2;
+    			JLabel friendsLabel = new JLabel("Friends:");
+    			panel.add(friendsLabel,c);
             	String friendsListArray[] = new String[friendsList.size()];
                 for(int i = 0; i < friendsList.size(); i++)
                 {
@@ -334,7 +391,8 @@ public class FaceNovel
                 friendsJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 friendsJList.addListSelectionListener(new ListListener());
     			
-                panel.add(friendsJList);
+                c.gridx = 1;
+                panel.add(friendsJList,c);
             }
 		
 			
@@ -345,6 +403,7 @@ public class FaceNovel
 			public void actionPerformed(ActionEvent e)
 			{
 				panel.removeAll();
+				dispose();
 				new editPerson(person);
 			}
 		}
@@ -361,7 +420,7 @@ public class FaceNovel
 				else
 				{
 					person.addFriend(personProfile);
-					JOptionPane.showMessageDialog(null, "Friend added");
+					JOptionPane.showMessageDialog(null, "Friend added. You may now close the Profile page and the changes will be relected.");
 				}
 				
 			}
@@ -372,6 +431,7 @@ public class FaceNovel
 			public void actionPerformed(ActionEvent e)
 			{
 				m.leaveNetwork(person);
+				dispose();
 				JOptionPane.showMessageDialog(null, "Account deleted");
 			}
 		}
@@ -389,23 +449,34 @@ public class FaceNovel
 		
 		private void createImagePanel() 
 		{
-			profilePicPanel = new JPanel();
+			profilePicPanel = new JPanel(new GridBagLayout());
+			c = new GridBagConstraints();
 
-			JLabel pic = new JLabel();
-			pic.setSize(50, 50);
-			BufferedImage img = person.getProfilePicture();
-			Image dimg = img.getScaledInstance(pic.getWidth(), pic.getHeight(),
-			        Image.SCALE_SMOOTH);
-			ImageIcon imageIcon = new ImageIcon(dimg);
-			pic.setIcon(imageIcon);
-						
-			profilePicPanel.add(pic);
+			if(person.getProfilePicture() != null)
+			{
+				JLabel pic = new JLabel();
+				pic.setSize(80, 80);
+				BufferedImage img = person.getProfilePicture();
+				Image dimg = img.getScaledInstance(pic.getWidth(), pic.getHeight(),
+				        Image.SCALE_SMOOTH);
+				ImageIcon imageIcon = new ImageIcon(dimg);
+				pic.setIcon(imageIcon);
+				
+		        c.gridx = 0;
+		        c.gridy = 0;
+		        c.insets = new Insets(5,5,5,5);
+				profilePicPanel.add(pic);
+			}
 			
 			nameLabel = new JLabel(person.getName());
+			
 			statusLabel = new JLabel(person.getStatus());
-						
-			profilePicPanel.add(nameLabel);
-			profilePicPanel.add(statusLabel);
+					
+			c.gridy = 1;
+			profilePicPanel.add(nameLabel,c);
+			
+			c.gridy = 2;
+			profilePicPanel.add(statusLabel,c);
 			
 		}
 		
@@ -423,25 +494,24 @@ public class FaceNovel
 
 		private ImageIcon profilepic;
 		private JPanel panel;
+		private JPanel panel2;
+		private JPanel panel3;
+
+		private GridBagConstraints c;
 		
 		public editPerson(Profile person) 
 		{
 			this.person = person;
-			
 			setTitle("Edit Account");
-			
-			setSize(200, 200);
-			
+			Dimension windowSize = new Dimension(200,200);
+			setMinimumSize(windowSize);
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			
 			setLayout(new BorderLayout());
-			
 			buildEditPanel();
-			
 			add(panel, BorderLayout.NORTH);
-			
-			pack();
-			
+			add(panel2, BorderLayout.CENTER);
+			add(panel3, BorderLayout.SOUTH);
+			pack();	
 			setVisible(true);
 			
 		}
@@ -465,16 +535,34 @@ public class FaceNovel
 			
 			// add an update image
 			
-			panel = new JPanel();
+			panel = new JPanel(new GridBagLayout());
+			panel2 = new JPanel(new GridBagLayout());
+			panel3 = new JPanel(new GridBagLayout());
 			
-			panel.add(changeStatusLabel);
-			panel.add(singleStatusButton);
-			panel.add(marriedStatusButton);
-			panel.add(changeStatusButton);
+			c = new GridBagConstraints();
+	        c.gridx = 0;
+	        c.gridy = 0;
+	        c.insets = new Insets(5,5,5,5);
+			panel.add(changeStatusLabel,c);
+			c.gridx = 1;
+			panel.add(singleStatusButton,c);
+			c.gridx++;
+			panel.add(marriedStatusButton,c);
+			c.gridx++;
+			panel.add(changeStatusButton,c);
 			
-			panel.add(uploadLabel);
-			panel.add(uploadTextField);
-			panel.add(uploadImgButton);
+			c.gridx = 0;
+			c.gridy = 0;
+			panel2.add(uploadLabel,c);
+			c.gridx++;
+			panel2.add(uploadTextField,c);
+			c.gridx++;
+			panel2.add(uploadImgButton,c);
+			
+			JLabel infoText = new JLabel("When finished, close this window and the changes will be relected.");
+			c.gridx = 0;
+			c.gridy = 0;
+			panel3.add(infoText,c);
 			
 		}
 			
