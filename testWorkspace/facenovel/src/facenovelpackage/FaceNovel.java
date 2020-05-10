@@ -22,8 +22,6 @@ import java.util.ArrayList;
 public class FaceNovel 
 {
 	private JFrame f;
-	private JFrame prof;
-	private JFrame edit;
 	private ProfileManager m;
 	
 	/** Constructor for FaceNovel class.
@@ -31,14 +29,15 @@ public class FaceNovel
 	public FaceNovel(ProfileManager m) 
 	{
 		f = new JFrame();
-		prof = new JFrame();
-		edit = new JFrame();
 		this.m = m;
 	}
 	
 	
 	
 	
+	/**	
+	 * The addPerson class creates the Home page where you can create an account 
+	 * */
 	public class addPerson 
 	{
 		private JPanel panel;
@@ -56,11 +55,8 @@ public class FaceNovel
 		private String status;
 		
 		private JButton addButton;
-		private final int WINDOW_WIDTH = 300;
-		private final int WINDOW_HEIGHT = 200;
 		private Dimension windowsize;
 		
-		private JButton uploadButton;
 	    private JLabel uploadLabel;
 	    private JTextField uploadTextField;
 		
@@ -138,8 +134,6 @@ public class FaceNovel
 	        c.gridx = 0;
 	        c.gridy = 5;
 	        panel.add(addButton,c);
-	        
-			
 		}
 		
 		
@@ -190,7 +184,6 @@ public class FaceNovel
 				}
 				else
 				{
-//					JOptionPane.showMessageDialog(null, "." + firstNameTextField.getText() + "SPACE" + lastNameTextField.getText() + ".");
 					toAdd.setName(firstNameTextField.getText(), lastNameTextField.getText());
 					
 					toAdd.setStatus(status);
@@ -223,10 +216,14 @@ public class FaceNovel
 				}
 			}
 		}
-		
 	}
 	
 	
+	
+	
+	/**	
+	 * The searchPerson class creates the page where you can search up people's profiles
+	 * */
 	public class searchPerson 
 	{
 		private JPanel panel;
@@ -234,8 +231,6 @@ public class FaceNovel
 		private JLabel messageLabel;
 		private JTextField textField;
 		private JButton searchButton;
-		private final int WINDOW_WIDTH = 300;
-		private final int WINDOW_HEIGHT = 200;
 		private Dimension windowsize;
 		
 		/** Constructor for searchPerson class. */
@@ -320,7 +315,9 @@ public class FaceNovel
 	
 
 	
-	
+	/**	
+	 * The profilePage class creates the profile page
+	 * */
 	public class profilePage extends JFrame
 	{
 		private Profile person;
@@ -334,7 +331,6 @@ public class FaceNovel
 		private String friendSelection;
 		private JList friendsJList;
 
-		private ImageIcon profilepic;
 		private JPanel panel;
 		private JPanel profilePicPanel;
 		
@@ -473,7 +469,7 @@ public class FaceNovel
 				friendSelection = (String) friendsJList.getSelectedValue();
 				Profile friend = m.findPerson(friendSelection);
 				
-				profilePage friendProfile = new profilePage(friend);
+				new profilePage(friend);
 			}
 		}
 		
@@ -514,6 +510,11 @@ public class FaceNovel
 	} // end class profilePage
 	
 	
+	
+	
+	/**	
+	 * The editPerson class creates the page that allows you to edit the user's information
+	 * */
 	public class editPerson extends JFrame
 	{
 		private Profile person;
@@ -523,7 +524,6 @@ public class FaceNovel
 		private JTextField uploadTextField;
 		private JButton uploadImgButton;
 
-		private ImageIcon profilepic;
 		private JPanel panel;
 		private JPanel panel2;
 		private JPanel panel3;
@@ -655,8 +655,6 @@ public class FaceNovel
 		
 	}
 
-	
-	
 	
 	
 	
