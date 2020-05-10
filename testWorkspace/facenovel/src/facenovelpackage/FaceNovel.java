@@ -1,24 +1,40 @@
 package facenovelpackage;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class FaceNovel 
 {
 	private JFrame f;
+	private JFrame prof;
+	private JFrame edit;
 	private ProfileManager m;
 	
 	public FaceNovel(ProfileManager m) 
 	{
 		f = new JFrame();
+		prof = new JFrame();
+		edit = new JFrame();
 		this.m = m;
 	}
 	
 	
+	
+
 	public class addPerson 
 	{
 		private JPanel panel;
@@ -38,12 +54,20 @@ public class FaceNovel
 		private JButton addButton;
 		private final int WINDOW_WIDTH = 300;
 		private final int WINDOW_HEIGHT = 200;
+		private Dimension windowsize;
+		
+		private JButton uploadButton;
+	    private JLabel uploadLabel;
+	    private JTextField uploadTextField;
+		
+		private GridLayout grid;
 		
 		public addPerson()
 		{
 			f.setTitle("FaceNovel");
-			f.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			windowsize = new Dimension(500, 500);
+			f.setMinimumSize(windowsize);
+			f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			buildPanel();
 			f.add(panel);
 			f.setVisible(true);
@@ -60,7 +84,7 @@ public class FaceNovel
 			lastNameLabel = new JLabel("Last name:");
 			lastNameTextField = new JTextField(20);
 			
-			statusLabel = new JLabel("Select your status");
+			statusLabel = new JLabel("Select your status:");
 			singleButton = new JButton("Single");
 			singleButton.addActionListener(new SingleButtonListener());
 			marriedButton = new JButton("Married");
@@ -72,6 +96,12 @@ public class FaceNovel
 			addButton.addActionListener(new AddButtonListener());
 			
 			panel = new JPanel();
+//			grid = new GridLayout(5,4);
+//			panel.setLayout(grid);
+			
+			uploadLabel = new JLabel("Enter your image's pathfield here:");
+	        uploadTextField = new JTextField(20);
+
 			
 			panel.add(navToSearchPerson);
 			panel.add(firstNameLabel);
@@ -81,7 +111,9 @@ public class FaceNovel
 			panel.add(statusLabel);
 			panel.add(singleButton);
 			panel.add(marriedButton);
-			panel.add(addButton);
+			panel.add(uploadLabel);
+	        panel.add(uploadTextField);
+	        panel.add(addButton);
 			
 		}
 		
@@ -115,14 +147,35 @@ public class FaceNovel
 			public void actionPerformed(ActionEvent e)
 			{
 				Profile toAdd = new Profile();
-				toAdd.setName(firstNameTextField.getText(), lastNameTextField.getText());
-				toAdd.setStatus(status);
-				m.addProfile(toAdd);
-				toAdd.display();
-				
-				panel.removeAll();
-				
-				new searchPerson();
+				if(firstNameTextField.getText() == null || lastNameTextField.getText() == null)
+				{
+					JOptionPane.showMessageDialog(null, "Enter a first and last name.");
+				}
+				else
+				{
+//					JOptionPane.showMessageDialog(null, "." + firstNameTextField.getText() + "SPACE" + lastNameTextField.getText() + ".");
+					toAdd.setName(firstNameTextField.getText(), lastNameTextField.getText());
+					
+					toAdd.setStatus(status);
+					
+					BufferedImage img = null;
+					try 
+					{
+					    img = ImageIO.read(new File(uploadTextField.getText()));
+					    toAdd.setProfilePicture(img);
+			            JOptionPane.showMessageDialog(null, "Image successfully uploaded."); //if image was uploaded
+			            m.addProfile(toAdd);
+						toAdd.display();
+						
+						panel.removeAll();
+						
+						new searchPerson();
+					} 
+					catch (IOException a) 
+					{
+			            JOptionPane.showMessageDialog(null, "Invalid image."); //if image was not uploaded
+					}
+				}
 			}
 		}
 		
@@ -138,12 +191,14 @@ public class FaceNovel
 		private JButton searchButton;
 		private final int WINDOW_WIDTH = 300;
 		private final int WINDOW_HEIGHT = 200;
+		private Dimension windowsize;
 		
 		public searchPerson() 
 		{
 			f.setTitle("Search Person");
-			f.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			windowsize = new Dimension(500, 500);
+			f.setMinimumSize(windowsize);
+			f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			buildPanel();
 			f.add(panel);
 			f.setVisible(true);
@@ -199,13 +254,11 @@ public class FaceNovel
 	} // end class searchPerson
 	
 	
-	
-	
+
 	
 	
 	public class profilePage extends JFrame
 	{
-
 		private Profile person;
 		
 		private JLabel nameLabel;
@@ -213,27 +266,31 @@ public class FaceNovel
 		
 		private JLabel addFriendLabel;
 		private JTextField addFriendTextField;
+		
+		private String friendSelection;
+		private JList friendsJList;
 
 		private ImageIcon profilepic;
-		private JPanel profile;
+		private JPanel panel;
 		private JPanel profilePicPanel;
 		
 		public profilePage(Profile person) {
-			this.person = person;
 			
+			this.person = person;
+		
 			setTitle("Profile");
 			
 			setSize(1000, 1000);
 			
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			
 			setLayout(new BorderLayout());
 			
 			createProfilePanel(person);
 			createImagePanel();
 			
-			add(profile, BorderLayout.NORTH);
-			add(profilePicPanel, BorderLayout.CENTER);
+			add(profilePicPanel, BorderLayout.NORTH);
+			add(panel, BorderLayout.CENTER);
 			
 			pack();
 			
@@ -242,37 +299,55 @@ public class FaceNovel
 		
 		private void createProfilePanel(Profile person) {
 			
-			nameLabel = new JLabel(person.getName());
-			statusLabel = new JLabel(person.getStatus());
+			ArrayList<Profile> friendsList = person.getFriends();
 			
-			ArrayList<Profile> friends = person.getFriends();
+			panel = new JPanel();
 			
-			profile = new JPanel();
+			JButton editProfileButton = new JButton("Edit Profile");
+			editProfileButton.addActionListener(new editButtonListener());
 			
-			profile.add(nameLabel);
-			profile.add(statusLabel);
+			panel.add(editProfileButton);
 			
 			addFriendLabel = new JLabel("Add a friend: ");
 			addFriendTextField = new JTextField(20); 
 			JButton addFriendButton = new JButton("Add");
 			addFriendButton.addActionListener(new addFriendButtonListener());
 			
-			profile.add(addFriendLabel);
-			profile.add(addFriendTextField);
-			profile.add(addFriendButton);
+			panel.add(addFriendLabel);
+			panel.add(addFriendTextField);
+			panel.add(addFriendButton);
 			
 			JButton deleteButton = new JButton("Delete Account");
 			deleteButton.addActionListener(new deleteButtonListener());
 			
-			profile.add(deleteButton);
-			
-			for(Profile friend : friends)
-			{
-				JLabel amigo = new JLabel(friend.getName());
-				profile.add(amigo);
-			}
+			panel.add(deleteButton);
+
+
+            // convert ArrayList to Array
+            if(friendsList.size() > 0)
+            {
+            	String friendsListArray[] = new String[friendsList.size()];
+                for(int i = 0; i < friendsList.size(); i++)
+                {
+                    friendsListArray[i] =  friendsList.get(i).getName();
+                }
+                friendsJList = new JList(friendsListArray);
+                friendsJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                friendsJList.addListSelectionListener(new ListListener());
+    			
+                panel.add(friendsJList);
+            }
 		
 			
+		}
+		
+		class editButtonListener implements ActionListener
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				panel.removeAll();
+				new editPerson(person);
+			}
 		}
 		
 		class addFriendButtonListener implements ActionListener
@@ -302,20 +377,153 @@ public class FaceNovel
 			}
 		}
 		
-		private void createImagePanel() {
-			
-			profilepic = new ImageIcon("/Users/shana/Desktop/sun.jpg");
-			JLabel profilePicLabel = new JLabel(profilepic);
-			
-			Dimension picsize = new Dimension(10, 10);
-			profilePicLabel.setMaximumSize(picsize);
-			
+		private class ListListener implements ListSelectionListener
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				friendSelection = (String) friendsJList.getSelectedValue();
+				Profile friend = m.findPerson(friendSelection);
+				
+				profilePage friendProfile = new profilePage(friend);
+			}
+		}
+		
+		private void createImagePanel() 
+		{
 			profilePicPanel = new JPanel();
+
+			JLabel pic = new JLabel();
+			pic.setSize(50, 50);
+			BufferedImage img = person.getProfilePicture();
+			Image dimg = img.getScaledInstance(pic.getWidth(), pic.getHeight(),
+			        Image.SCALE_SMOOTH);
+			ImageIcon imageIcon = new ImageIcon(dimg);
+			pic.setIcon(imageIcon);
+						
+			profilePicPanel.add(pic);
 			
-			profilePicPanel.add(profilePicLabel);
+			nameLabel = new JLabel(person.getName());
+			statusLabel = new JLabel(person.getStatus());
+						
+			profilePicPanel.add(nameLabel);
+			profilePicPanel.add(statusLabel);
+			
 		}
 		
 	} // end class profilePage
+	
+	
+	public class editPerson extends JFrame
+	{
+		private Profile person;
+		private String status;
+		
+		private JLabel uploadLabel;
+		private JTextField uploadTextField;
+		private JButton uploadImgButton;
+
+		private ImageIcon profilepic;
+		private JPanel panel;
+		
+		public editPerson(Profile person) 
+		{
+			this.person = person;
+			
+			setTitle("Edit Account");
+			
+			setSize(200, 200);
+			
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			
+			setLayout(new BorderLayout());
+			
+			buildEditPanel();
+			
+			add(panel, BorderLayout.NORTH);
+			
+			pack();
+			
+			setVisible(true);
+			
+		}
+		
+		private void buildEditPanel() 
+		{
+			JLabel changeStatusLabel = new JLabel("Change status: ");
+			JButton singleStatusButton = new JButton("Single");
+			singleStatusButton.addActionListener(new singleListener());
+			
+			JButton marriedStatusButton = new JButton("Married");
+			marriedStatusButton.addActionListener(new marriedListener());
+			
+			JButton changeStatusButton = new JButton("Submit Change of Status");
+			changeStatusButton.addActionListener(new changeStatusListener());
+			
+			uploadLabel = new JLabel("Enter your image's pathfield here:");
+	        uploadTextField = new JTextField(20);
+	        uploadImgButton = new JButton("Upload Image");
+	        uploadImgButton.addActionListener(new changePicListener());
+			
+			// add an update image
+			
+			panel = new JPanel();
+			
+			panel.add(changeStatusLabel);
+			panel.add(singleStatusButton);
+			panel.add(marriedStatusButton);
+			panel.add(changeStatusButton);
+			
+			panel.add(uploadLabel);
+			panel.add(uploadTextField);
+			panel.add(uploadImgButton);
+			
+		}
+			
+		class singleListener implements ActionListener
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				status = "Single";
+			}
+		}
+		
+		class marriedListener implements ActionListener
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				status = "Married";
+			}
+		}
+		
+		class changeStatusListener implements ActionListener
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				person.setStatus(status);
+				JOptionPane.showMessageDialog(null, "Status changed to " + status);
+			}
+		}
+		
+		class changePicListener implements ActionListener
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				BufferedImage img = null;
+				try 
+				{
+				    img = ImageIO.read(new File(uploadTextField.getText()));
+				    person.setProfilePicture(img);
+		            JOptionPane.showMessageDialog(null, "Image successfully uploaded."); //if image was uploaded
+
+				} 
+				catch (IOException a) 
+				{
+		            JOptionPane.showMessageDialog(null, "Invalid image."); //if image was not uploaded
+				}
+			}
+		}
+		
+	}
 
 	
 	
@@ -331,5 +539,6 @@ public class FaceNovel
 		FaceNovel thing = new FaceNovel(m);
 		thing.new addPerson();
 	}
+	
 }// end class FaceNovel
 

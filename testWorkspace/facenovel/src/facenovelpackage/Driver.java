@@ -1,5 +1,14 @@
 package facenovelpackage;
 
+import java.util.*;
+
+import javax.imageio.ImageIO;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 public class Driver
 {
 	public static void main(String[] args)
@@ -25,8 +34,6 @@ public class Driver
 		sunny.setName("Sunny", "Mistry");
 		sunny.setStatus("Single");
 		m.addProfile(sunny);
-		
-		
 		
 		m.leaveNetwork(john);
 		
