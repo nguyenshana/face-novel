@@ -1,4 +1,6 @@
 package facenovelpackage;
+import java.awt.image.*;
+import java.util.*;
 
 import java.awt.image.*;
 import java.util.*;
@@ -6,7 +8,6 @@ import java.util.*;
 //import ADTPackage.*;
 /**
 	An implementation of a profile manager on a simple social network.
-
 	@author Jesse Grabowski
 	@author Joseph Erickson
 	@version 5.0 */
@@ -37,11 +38,16 @@ public class ProfileManager
 		b.addFriend(a);
 	} // end createFriendship
 
+	/** Removes given profile from the network.
+		@param person  The profile that's leaving the network. */
 	public void leaveNetwork(Profile person)
 	{
 		allProfiles.remove(person);
 	}
 	
+	/** Searches for the profile of the person with the given name and returns the profile if found. If not found, returns null.
+		@param searchName  The full name of the person that we are searching.
+		@return the profile of the person. */
 	public Profile findPerson(String searchName)
 	{
 		for(Profile person : allProfiles.getNetwork()) 
@@ -54,7 +60,8 @@ public class ProfileManager
 		return null;
 	}
 	
-	/** Displays each profile's information and friends. */
+	/** Displays each profile's information and friends. 
+	 	@param startPoint  The first profile that we will display. */
 	public void display(Profile startPoint)
 	{
 		ArrayList<Profile> network = allProfiles.getNetwork();
@@ -65,4 +72,3 @@ public class ProfileManager
 		}
 	}
 } // end ProfileManager
-
