@@ -42,7 +42,7 @@ public class Profile {
        @param lastName   The last name for the profile. */
    public void setName(String firstName, String lastName)
    {
-      name = firstName + " " + lastName;
+      name = firstName.replaceAll("\\s+","") + " " + lastName.replaceAll("\\s+","");
    } // end setName
 
    /** Returns the name associated with the profile.

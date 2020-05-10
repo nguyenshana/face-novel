@@ -90,7 +90,6 @@ public class FaceNovel
 			marriedButton = new JButton("Married");
 			marriedButton.addActionListener(new MarriedButtonListener());
 
-//			ADD PICTURE & ACTION THING
 			
 			addButton = new JButton("Add");
 			addButton.addActionListener(new AddButtonListener());
