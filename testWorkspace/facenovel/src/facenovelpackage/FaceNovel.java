@@ -1,5 +1,4 @@
 package facenovelpackage;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -27,6 +26,8 @@ public class FaceNovel
 	private JFrame edit;
 	private ProfileManager m;
 	
+	/** Constructor for FaceNovel class.
+	@param m  an instance of ProfileManager. */
 	public FaceNovel(ProfileManager m) 
 	{
 		f = new JFrame();
@@ -37,7 +38,7 @@ public class FaceNovel
 	
 	
 	
-
+	
 	public class addPerson 
 	{
 		private JPanel panel;
@@ -63,7 +64,7 @@ public class FaceNovel
 	    private JLabel uploadLabel;
 	    private JTextField uploadTextField;
 		
-		
+	    /** Constructor for addPerson class. */
 		public addPerson()
 		{
 			f.setTitle("FaceNovel");
@@ -77,6 +78,7 @@ public class FaceNovel
 			f.setVisible(true);
 		}
 		
+		/** Builds the panel. */
 		public void buildPanel()
 		{
 			navToSearchPerson = new JButton("Search for a person");
@@ -140,8 +142,12 @@ public class FaceNovel
 			
 		}
 		
+		
 		class goToSearch implements ActionListener
 		{
+			/** Performs the search when the search button is pushed. 
+			@param e whether or not the button is pushed. */
+			
 			public void actionPerformed(ActionEvent e)
 			{
 				panel.removeAll();
@@ -150,8 +156,11 @@ public class FaceNovel
 			}
 		}
 		
+		
 		class SingleButtonListener implements ActionListener
 		{
+			/** Sets the status as "Single" when the single button is pushed.
+			@param e whether or not the button is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				status = "Single";
@@ -160,6 +169,8 @@ public class FaceNovel
 		
 		class MarriedButtonListener implements ActionListener
 		{
+			/** Sets the status as "Married" when the married button is pushed.
+			@param e whether or not the button is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				status = "Married";
@@ -168,6 +179,8 @@ public class FaceNovel
 		
 		class AddButtonListener implements ActionListener
 		{
+			/** Adds another profile to the network when the add button is pushed.
+			@param e whether or not the button is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				Profile toAdd = new Profile();
@@ -225,6 +238,7 @@ public class FaceNovel
 		private final int WINDOW_HEIGHT = 200;
 		private Dimension windowsize;
 		
+		/** Constructor for searchPerson class. */
 		public searchPerson() 
 		{
 			f.setTitle("Search Person");
@@ -238,7 +252,7 @@ public class FaceNovel
 			f.setVisible(true);
 		}
 	
-	
+		/** Builds the panel. */
 		public void buildPanel()
 		{
 			navToAdd = new JButton("Create an Account");
@@ -271,6 +285,8 @@ public class FaceNovel
 		
 		class goToAdd implements ActionListener
 		{
+			/** Goes back to the add page when the "create an account" button is pushed.
+			@param e whether or not the button is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				panel.removeAll();
@@ -281,6 +297,8 @@ public class FaceNovel
 		
 		class SearchButtonListener implements ActionListener
 		{
+			/** Searches for the user's input inside the text field when the "search" button is pushed.
+			@param e whether or not the button is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				String input = textField.getText();
@@ -322,6 +340,8 @@ public class FaceNovel
 		
 		private GridBagConstraints c;
 		
+		/** Constructor for profilePage.
+		@param person  the specified profile. */
 		public profilePage(Profile person) {
 			
 			this.person = person;
@@ -340,6 +360,8 @@ public class FaceNovel
 			setVisible(true);
 		}
 		
+		/** Creates a new panel for the given profile.
+		@param person  the specified profile. */
 		private void createProfilePanel(Profile person) {
 			
 			ArrayList<Profile> friendsList = person.getFriends();
@@ -400,6 +422,8 @@ public class FaceNovel
 		
 		class editButtonListener implements ActionListener
 		{
+			/** Navigates the user to the edit profile page when the "edit profile" button is pushed.
+			@param e  whether or not the button is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				panel.removeAll();
@@ -410,6 +434,8 @@ public class FaceNovel
 		
 		class addFriendButtonListener implements ActionListener
 		{
+			/** Adds the profile to the user's friends list when the "add" button is pushed.
+			@param e  whether or not the button is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				Profile personProfile = m.findPerson(addFriendTextField.getText());
@@ -428,6 +454,8 @@ public class FaceNovel
 		
 		class deleteButtonListener implements ActionListener
 		{
+			/** Allows the user to delete their account when the "delete account" button is pushed.
+			@param e  whether or not the button is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				m.leaveNetwork(person);
@@ -438,6 +466,8 @@ public class FaceNovel
 		
 		private class ListListener implements ListSelectionListener
 		{
+			/** Navigates to the intended friend's profile when selected.
+			@param e  whether or not the item on the list is selected. */
 			public void valueChanged(ListSelectionEvent e)
 			{
 				friendSelection = (String) friendsJList.getSelectedValue();
@@ -447,6 +477,7 @@ public class FaceNovel
 			}
 		}
 		
+		/** Creates an image panel for the profile picture. */
 		private void createImagePanel() 
 		{
 			profilePicPanel = new JPanel(new GridBagLayout());
@@ -499,6 +530,8 @@ public class FaceNovel
 
 		private GridBagConstraints c;
 		
+		/** Constructor for the editPerson class.
+		@param person  the profile that is being edited. */
 		public editPerson(Profile person) 
 		{
 			this.person = person;
@@ -516,6 +549,7 @@ public class FaceNovel
 			
 		}
 		
+		/** Builds the edit panel and allows the user to edit the profile's elements. */
 		private void buildEditPanel() 
 		{
 			JLabel changeStatusLabel = new JLabel("Change status: ");
@@ -565,9 +599,12 @@ public class FaceNovel
 			panel3.add(infoText,c);
 			
 		}
-			
+		
+		
 		class singleListener implements ActionListener
 		{
+			/** Changes the status to single when the "Single" is selected.
+			@param e  whether or not the choice is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				status = "Single";
@@ -576,6 +613,8 @@ public class FaceNovel
 		
 		class marriedListener implements ActionListener
 		{
+			/** Changes the status to married when the "Married" is selected.
+			@param e  whether or not the choice is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				status = "Married";
@@ -584,6 +623,8 @@ public class FaceNovel
 		
 		class changeStatusListener implements ActionListener
 		{
+			/** Updates the profile's status when the "Submit Change of Status" button is pushed.
+			@param e  whether or not the button is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				person.setStatus(status);
@@ -593,6 +634,8 @@ public class FaceNovel
 		
 		class changePicListener implements ActionListener
 		{
+			/** Updates the profile's picture when the "Upload Image" button is pushed.
+			@param e  whether or not the button is pushed. */
 			public void actionPerformed(ActionEvent e)
 			{
 				BufferedImage img = null;
@@ -628,4 +671,3 @@ public class FaceNovel
 	}
 	
 }// end class FaceNovel
-
