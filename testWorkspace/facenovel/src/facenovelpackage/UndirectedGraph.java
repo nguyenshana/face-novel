@@ -1,6 +1,9 @@
 package facenovelpackage;
 import java.util.*;
 
+// This class is the Undirected Graph that manages the profiles 
+// and their connections
+
 public class UndirectedGraph<T extends Profile>
 {
 

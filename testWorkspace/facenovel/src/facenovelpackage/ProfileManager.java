@@ -1,11 +1,7 @@
 package facenovelpackage;
-import java.awt.image.*;
-import java.util.*;
 
-import java.awt.image.*;
-import java.util.*;
-//import GraphPackage.*;
-//import ADTPackage.*;
+import java.util.ArrayList;
+
 /**
 	An implementation of a profile manager on a simple social network.
 	@author Jesse Grabowski

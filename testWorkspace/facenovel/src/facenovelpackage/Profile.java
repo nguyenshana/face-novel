@@ -42,7 +42,8 @@ public class Profile {
        @param lastName   The last name for the profile. */
    public void setName(String firstName, String lastName)
    {
-      name = firstName.replaceAll("\\s+","") + " " + lastName.replaceAll("\\s+","");
+      name = firstName.trim() + " " + lastName.trim();
+      name = name.toUpperCase();
    } // end setName
 
    /** Returns the name associated with the profile.
@@ -57,6 +58,7 @@ public class Profile {
 	public void setStatus(String stat)
 	{
 		status = stat;
+		this.display();
 	} // end setStatus
 
 	/** Returns the status associated with the profile.
@@ -78,6 +80,7 @@ public class Profile {
 	public void addFriend(Profile p)
 	{
 		friendProfiles.add(p);
+		this.display();
 	} // end addFriend
 
 	/** Removes a friend from the profile's list of friendProfiles.
@@ -102,6 +105,7 @@ public class Profile {
 		if(friendProfiles.size() == 0)
 		{
 			System.out.println("No friends :(");
+			System.out.print(picture);
 		}
 		for(int i = 0; i < friendProfiles.size(); i++)
 		{
